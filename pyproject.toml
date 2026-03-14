@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.backends.legacy:build"
+
+[project]
+name            = "minigrid-mdp"
+version         = "0.1.0"
+description     = "Solar-battery-diesel mini-grid dispatch simulation (Gymnasium)"
+requires-python = ">=3.11"
+dependencies    = [
+    "gymnasium>=1.0",
+    "numpy>=1.26",
+    "pandas>=2.0",
+    "pyyaml>=6.0",
+]
+
+[project.optional-dependencies]
+dev  = ["pytest>=8", "jupyter"]
+drl  = ["stable-baselines3>=2.0"]
+
+[tool.pytest.ini_options]
+testpaths = ["minigrid_mdp/tests"]
