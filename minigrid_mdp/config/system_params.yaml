@@ -1,0 +1,53 @@
+# Mini-grid system parameters — 50 kW Nigerian rural mini-grid
+# Primary sources:
+#   [1] IRENA (2016). "Scaling Up Mini-grids for the Last Billion."
+#   [2] Balogun et al. (2020). "Techno-economic analysis of solar-diesel hybrid
+#       systems for rural electrification in Nigeria." Energy Reports 6.
+#   [3] Dufo-López & Bernal-Agustín (2015). "Multi-objective design of PV–wind–
+#       diesel–hydrogen–battery systems." Renewable Energy 82.
+#   [4] Wöhrle et al. (2021). "Battery degradation models for mini-grid sizing."
+#       Applied Energy 290.
+
+simulation:
+  timestep_hours: 1.0          # hourly resolution
+  episode_length: 24           # one day per episode
+  seed: 42
+
+pv:
+  rated_power_kw: 50.0         # [1] typical 50 kW SHS for 200-household community
+  panel_efficiency: 0.18       # [2] monocrystalline panels common in Nigeria
+  performance_ratio: 0.80      # [2] accounts for dust, wiring, mismatch losses
+  irradiance_peak_hour: 13     # 1 PM local time — Nigerian solar noon
+  irradiance_sigma_frac: 0.15  # stochastic ±15% of deterministic curve [3]
+
+battery:
+  capacity_kwh: 100.0          # [1] ~2h storage at rated load
+  max_charge_rate_kw: 30.0     # 0.3C rate — conservative for longevity [4]
+  max_discharge_rate_kw: 40.0  # 0.4C rate
+  round_trip_efficiency: 0.92  # [4] LFP chemistry assumed
+  initial_soc: 0.70
+  min_soc: 0.20                # hard DoD limit (80% DoD max) [4]
+  max_soc: 0.95
+  degradation_per_cycle: 0.0002  # 0.02% capacity loss per full cycle [4]
+  stress_threshold_dod: 0.60   # DoD beyond which degradation accelerates
+
+diesel:
+  rated_power_kw: 30.0         # [1] backup generator for peak / night demand
+  min_load_fraction: 0.30      # generators shouldn't run below 30% load [2]
+  fuel_price_usd_per_litre: 0.60  # [2] Nigerian market price (2020, ~NGN 230)
+  fuel_consumption_l_per_kwh: 0.30 # [2] ~300 g/kWh BSFC at rated load
+  startup_cost_usd: 0.50       # wear-and-tear per start [3]
+  hourly_fixed_cost_usd: 0.20  # idling + maintenance amortisation [3]
+
+load:
+  peak_demand_kw: 35.0         # [1] 200 households × ~175 W average peak
+  base_demand_kw: 8.0          # night-time base load [1]
+  peak_hour: 20                # 8 PM — cooking + lighting peak [2]
+  peak_width_hours: 3.0        # Gaussian width of evening peak
+  demand_sigma_frac: 0.12      # ±12% stochastic variation [3]
+
+reward:
+  unmet_load_cost_per_kwh: 2.00    # Value-of-Lost-Load (VoLL) $/kWh [1]
+  fuel_cost_weight: 1.0            # pass-through of actual fuel cost
+  battery_stress_cost_per_dod: 0.50 # $/% DoD beyond threshold [4]
+  diesel_runtime_penalty: 0.10     # $/hour of unnecessary diesel runtime
