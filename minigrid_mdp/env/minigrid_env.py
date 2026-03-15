@@ -93,6 +93,11 @@ class MiniGridEnv(gym.Env):
         self._diesel_on    = False
         self._step_count   = 0
 
+        # Cached PV/load drawn by _make_obs(); consumed by the following step()
+        # so both the observation and the dispatch use the same noise sample.
+        self._cached_pv:   float = 0.0
+        self._cached_load: float = 0.0
+
         # Episode log list (list of dicts, converted to DataFrame on demand)
         self._log: list[dict] = []
 
@@ -119,9 +124,10 @@ class MiniGridEnv(gym.Env):
 
         hour = self._step_count % 24
 
-        # 1. Stochastic generation & demand for this timestep
-        pv_avail   = self._pv_output(hour)
-        load_dem   = self._load_demand(hour)
+        # 1. Consume the PV/load samples that were drawn by _make_obs() when
+        #    this timestep's observation was built — no second RNG draw.
+        pv_avail = self._cached_pv
+        load_dem = self._cached_load
 
         # 2. Dispatch logic — returns energy flows (kWh over dt)
         flows = self._dispatch(action, pv_avail, load_dem, hour)
@@ -364,17 +370,21 @@ class MiniGridEnv(gym.Env):
     # Observation builder
     # ------------------------------------------------------------------
     def _make_obs(self) -> np.ndarray:
-        hour     = self._step_count % 24
-        pv_now   = self._pv_output(hour)   # peek at current PV (deterministic part)
-        load_now = self._load_demand(hour)  # peek at current load
+        hour = self._step_count % 24
+
+        # Sample once and cache so that step() uses the identical values for
+        # dispatch — eliminates the double-sampling bug where the observation
+        # and the actual dispatch drew independent noise realisations.
+        self._cached_pv   = self._pv_output(hour)
+        self._cached_load = self._load_demand(hour)
 
         hour_sin = math.sin(2 * math.pi * hour / 24)
         hour_cos = math.cos(2 * math.pi * hour / 24)
 
         return np.array([
             self._soc,
-            pv_now,
-            load_now,
+            self._cached_pv,
+            self._cached_load,
             float(self._diesel_on),
             hour_sin,
             hour_cos,
