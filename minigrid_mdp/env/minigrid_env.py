@@ -334,9 +334,14 @@ class MiniGridEnv(gym.Env):
         die  = self.die_cfg
         bat  = self.bat_cfg
 
-        # 1. Unmet load penalty (VoLL)
-        unmet_kwh       = flows["unmet_load_kw"] * self.dt
-        r_unmet         = -r["unmet_load_cost_per_kwh"] * unmet_kwh
+        # 1. Unmet load penalty (VoLL) — also applied to deliberately curtailed
+        #    demand (shed_load action) so that shedding is always strictly
+        #    costlier than dispatching diesel.  PV curtailment from other
+        #    actions (surplus solar that cannot be stored) is not penalised.
+        unmet_kwh            = flows["unmet_load_kw"] * self.dt
+        curtailed_demand_kwh = (flows["curtailed_kw"] * self.dt
+                                if flows["action"] == ACTION_SHED_LOAD else 0.0)
+        r_unmet              = -r["unmet_load_cost_per_kwh"] * (unmet_kwh + curtailed_demand_kwh)
 
         # 2. Fuel cost
         diesel_kwh      = flows["diesel_kw"] * self.dt
@@ -351,18 +356,28 @@ class MiniGridEnv(gym.Env):
         excess_dod      = max(0.0, dod - bat["stress_threshold_dod"])
         r_bat_stress    = -r["battery_stress_cost_per_dod"] * excess_dod
 
-        # 4. Diesel runtime penalty (penalise running diesel when PV alone suffices)
-        pv_surplus      = max(0.0, flows["pv_kw"] - load_kw)
-        unnecessary_run = flows["diesel_on"] and pv_surplus > 0
-        r_diesel_idle   = -r["diesel_runtime_penalty"] if unnecessary_run else 0.0
+        # 4. Solar-hour diesel penalty — fire whenever PV exceeds the negligible
+        #    threshold (10 % of rated capacity), not only when there is a net
+        #    PV surplus.  Shadow-prices the available solar energy at the same
+        #    fuel rate, doubling the effective cost of co-running diesel during
+        #    daylight and discouraging charge-from-diesel while PV is available.
+        pv_threshold = 0.10 * self.pv_cfg["rated_power_kw"]
+        if flows["diesel_on"] and flows["pv_kw"] > pv_threshold:
+            shadow_kwh     = flows["pv_kw"] * self.dt
+            r_diesel_solar = -(shadow_kwh
+                               * die["fuel_consumption_l_per_kwh"]
+                               * die["fuel_price_usd_per_litre"]
+                               * r["fuel_cost_weight"])
+        else:
+            r_diesel_solar = 0.0
 
-        total = r_unmet + r_fuel + r_bat_stress + r_diesel_idle
+        total = r_unmet + r_fuel + r_bat_stress + r_diesel_solar
 
         rew_components = {
             "unmet_load":     r_unmet,
             "fuel":           r_fuel,
             "battery_stress": r_bat_stress,
-            "diesel_idle":    r_diesel_idle,
+            "diesel_solar":   r_diesel_solar,
         }
         return total, rew_components
 
