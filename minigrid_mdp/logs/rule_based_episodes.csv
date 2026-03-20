@@ -1,4 +1,4 @@
-episode,agent_type,step,hour,action,soc,soc_after,pv_kw,load_kw,diesel_on,diesel_kw,battery_kw,unmet_load_kw,curtailed_kw,health,reward,rew_unmet_load,rew_fuel,rew_battery_stress,rew_diesel_idle
+episode,agent_type,step,hour,action,soc,soc_after,pv_kw,load_kw,diesel_on,diesel_kw,battery_kw,unmet_load_kw,curtailed_kw,health,reward,rew_unmet_load,rew_fuel,rew_battery_stress,rew_diesel_solar
 0,rule_based,0,0,1,0.7,0.6213,0.001,7.873,0,0.0,7.873,0.0,0.0,0.99997,0.0,-0.0,-0.0,-0.0,0.0
 0,rule_based,1,1,1,0.6213,0.5403,0.003,8.101,0,0.0,8.098,0.0,0.0,0.99994,0.0,-0.0,-0.0,-0.0,0.0
 0,rule_based,2,2,1,0.5403,0.4569,0.008,8.347,0,0.0,8.339,0.0,0.0,0.9999,0.0,-0.0,-0.0,-0.0,0.0

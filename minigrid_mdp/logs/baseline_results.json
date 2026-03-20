@@ -1,5 +1,5 @@
 {
-  "_description": "Permanent baseline benchmark. 20 episodes each, seeds 0-19. DRL agent results should be compared against rule_based figures.",
+  "_description": "Permanent baseline benchmark. 20 episodes each, seeds 0-19. Reward function: VoLL applied to curtailed (shed) demand; solar-hour diesel shadow-penalty (pv>10% rated). DRL agent results should be compared against rule_based figures.",
   "env_config": {
     "base_demand_kw": 8.0,
     "peak_demand_kw": 35.0,
@@ -156,143 +156,143 @@
       "agent": "random",
       "n_episodes": 20,
       "mean_reward": {
-        "mean": -153.7532,
-        "std": 60.9524,
-        "min": -265.8576,
-        "max": -51.2119
+        "mean": -242.8506,
+        "std": 83.9561,
+        "min": -398.6579,
+        "max": -69.212
       },
       "diesel_hour_pct": {
-        "mean": 42.5005,
-        "std": 10.3405,
-        "min": 25.0,
+        "mean": 40.2085,
+        "std": 10.3136,
+        "min": 20.83,
         "max": 58.33
       },
       "unmet_load_pct": {
-        "mean": 15.1969,
-        "std": 9.3372,
+        "mean": 19.0236,
+        "std": 11.0999,
         "min": 0.0,
-        "max": 32.6007
+        "max": 41.3765
       },
       "per_episode": [
         {
           "episode": 0,
-          "total_reward": -127.6916,
+          "total_reward": -247.4473,
           "diesel_hour_pct": 41.67,
-          "unmet_load_pct": 10.8819
+          "unmet_load_pct": 15.4037
         },
         {
           "episode": 1,
-          "total_reward": -184.6192,
-          "diesel_hour_pct": 29.17,
-          "unmet_load_pct": 21.1437
+          "total_reward": -69.212,
+          "diesel_hour_pct": 58.33,
+          "unmet_load_pct": 0.0
         },
         {
           "episode": 2,
-          "total_reward": -237.8874,
-          "diesel_hour_pct": 29.17,
-          "unmet_load_pct": 27.6405
+          "total_reward": -373.6638,
+          "diesel_hour_pct": 20.83,
+          "unmet_load_pct": 41.3765
         },
         {
           "episode": 3,
-          "total_reward": -54.5314,
-          "diesel_hour_pct": 54.17,
-          "unmet_load_pct": 0.0
+          "total_reward": -167.8526,
+          "diesel_hour_pct": 45.83,
+          "unmet_load_pct": 7.5299
         },
         {
           "episode": 4,
-          "total_reward": -172.5609,
-          "diesel_hour_pct": 33.33,
-          "unmet_load_pct": 19.2438
+          "total_reward": -290.4822,
+          "diesel_hour_pct": 29.17,
+          "unmet_load_pct": 24.3269
         },
         {
           "episode": 5,
-          "total_reward": -206.2828,
-          "diesel_hour_pct": 33.33,
-          "unmet_load_pct": 24.5916
+          "total_reward": -216.9855,
+          "diesel_hour_pct": 58.33,
+          "unmet_load_pct": 15.5411
         },
         {
           "episode": 6,
-          "total_reward": -176.7744,
+          "total_reward": -208.6419,
           "diesel_hour_pct": 41.67,
-          "unmet_load_pct": 17.726
+          "unmet_load_pct": 17.6583
         },
         {
           "episode": 7,
-          "total_reward": -112.1486,
-          "diesel_hour_pct": 41.67,
-          "unmet_load_pct": 9.2141
+          "total_reward": -177.8475,
+          "diesel_hour_pct": 54.17,
+          "unmet_load_pct": 15.0157
         },
         {
           "episode": 8,
-          "total_reward": -81.1769,
-          "diesel_hour_pct": 45.83,
-          "unmet_load_pct": 4.2698
+          "total_reward": -297.3054,
+          "diesel_hour_pct": 29.17,
+          "unmet_load_pct": 33.0157
         },
         {
           "episode": 9,
-          "total_reward": -168.4683,
-          "diesel_hour_pct": 37.5,
-          "unmet_load_pct": 17.4102
+          "total_reward": -333.6199,
+          "diesel_hour_pct": 33.33,
+          "unmet_load_pct": 26.8653
         },
         {
           "episode": 10,
-          "total_reward": -265.8576,
-          "diesel_hour_pct": 25.0,
-          "unmet_load_pct": 32.6007
+          "total_reward": -157.9945,
+          "diesel_hour_pct": 45.83,
+          "unmet_load_pct": 11.8007
         },
         {
           "episode": 11,
-          "total_reward": -158.2411,
+          "total_reward": -173.6409,
           "diesel_hour_pct": 41.67,
-          "unmet_load_pct": 17.0996
+          "unmet_load_pct": 4.8505
         },
         {
           "episode": 12,
-          "total_reward": -57.2817,
-          "diesel_hour_pct": 58.33,
-          "unmet_load_pct": 0.844
-        },
-        {
-          "episode": 13,
-          "total_reward": -92.895,
-          "diesel_hour_pct": 50.0,
-          "unmet_load_pct": 4.9177
-        },
-        {
-          "episode": 14,
-          "total_reward": -182.2349,
-          "diesel_hour_pct": 58.33,
-          "unmet_load_pct": 16.4128
-        },
-        {
-          "episode": 15,
-          "total_reward": -51.2119,
-          "diesel_hour_pct": 58.33,
+          "total_reward": -178.7062,
+          "diesel_hour_pct": 41.67,
           "unmet_load_pct": 0.0
         },
         {
-          "episode": 16,
-          "total_reward": -232.0855,
+          "episode": 13,
+          "total_reward": -195.4247,
+          "diesel_hour_pct": 45.83,
+          "unmet_load_pct": 19.3988
+        },
+        {
+          "episode": 14,
+          "total_reward": -354.0589,
           "diesel_hour_pct": 29.17,
-          "unmet_load_pct": 27.8038
+          "unmet_load_pct": 35.0986
+        },
+        {
+          "episode": 15,
+          "total_reward": -206.1803,
+          "diesel_hour_pct": 41.67,
+          "unmet_load_pct": 16.8046
+        },
+        {
+          "episode": 16,
+          "total_reward": -306.6046,
+          "diesel_hour_pct": 33.33,
+          "unmet_load_pct": 27.4986
         },
         {
           "episode": 17,
-          "total_reward": -156.004,
-          "diesel_hour_pct": 41.67,
-          "unmet_load_pct": 16.2736
+          "total_reward": -314.4917,
+          "diesel_hour_pct": 37.5,
+          "unmet_load_pct": 29.0612
         },
         {
           "episode": 18,
-          "total_reward": -161.3018,
-          "diesel_hour_pct": 45.83,
-          "unmet_load_pct": 16.0466
+          "total_reward": -188.1939,
+          "diesel_hour_pct": 50.0,
+          "unmet_load_pct": 12.8942
         },
         {
           "episode": 19,
-          "total_reward": -195.8088,
-          "diesel_hour_pct": 54.17,
-          "unmet_load_pct": 19.8175
+          "total_reward": -398.6579,
+          "diesel_hour_pct": 25.0,
+          "unmet_load_pct": 26.3312
         }
       ]
     }
